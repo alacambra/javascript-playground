@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello form</title>
+</head>
+
+<body>
+    <div>
+        <p>test</p>
+        <my-form data-id="first"></my-form>
+    </div>
+    <div>
+        <p>test2</p>
+        <another-form data-id="second"></another-form>
+    </div>
+
+</body>
+
+<template id="formcomponent">
+    <div>
+        <label for="name">name:</label>
+        <input name="name" id="name" type="text" />
+        <button id="btn" name="button">do something</button>
+        <div id="display">text</div>
+    </div>
+</template>
+<script src="hello.js"></script>
+
+</html>
