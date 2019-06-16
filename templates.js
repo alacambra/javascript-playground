@@ -1,4 +1,4 @@
-<template id="formcomponent">
+<template id="formcomponentWithMustache">
     <div>
         <label for="name">name:</label>
         <input name="name" id="name" type="text" />

@@ -9,6 +9,38 @@ async function getSomeAsnyncValue1() {
     return "I am a nice value: " + Date.now();
 }
 
+class MustacheForm extends HTMLElement {
+
+    constructor() {
+
+        super();
+
+        this.loadElements();
+        this.initElements();
+        this.innerHTML = this.tpl;
+    }
+
+    loadElements() {
+
+        this.tpl = tplProvider.cloneMustacheTpl();
+        this.nameLabel = this.tpl.querySelector('label[for="name"]');
+        this.button = this.tpl.querySelector('#btn');
+        this.displayElement = this.tpl.querySelector('#display');
+        this.dataId = this.dataset.id;
+    }
+    initElements() {
+
+        let values = {
+            btnText: "mustacheBtn",
+            displayText: "mustacheText",
+        }
+        console.log(this.tpl.innerText);
+        this.tpl = Mustache.render(this.tpl.innerHTML, values);
+        
+    }
+}
+
+
 class BaseForm extends HTMLElement {
 
     constructor(labelName, displayText) {
@@ -96,20 +128,45 @@ class AnotherForm extends BaseForm {
 class TplProvider {
 
     constructor() {
+
+    }
+
+    load() {
         let c = document.querySelector("#formcomponent")
         this.tpl = c.content.cloneNode(true);
+        this.mustacheTpl = document.querySelector("#formcomponentWithMustache").cloneNode(true);
     }
 
     cloneTpl() {
-        return this.tpl.cloneNode(true);;
+        return this.tpl.cloneNode(true);
+    }
+
+    cloneMustacheTpl() {
+        return this.mustacheTpl.cloneNode(true);
     }
 }
 
-let tplProvider = new TplProvider();
-console.log("info");
-customElements.define("my-form", MyForm);
-customElements.define("another-form", AnotherForm);
+fetch("templates.js")
+    .then(response => response.text())
+    .then(t => {
+        let wrapper = document.createElement('div');
+        wrapper.innerHTML = t;
+        document.querySelector("body").appendChild(wrapper);
+    })
+    .then(v => {
 
-document.addEventListener("sayHello", ev => {
-    console.log("received on html", ev);
-});
+        console.log("info");
+        tplProvider.load();
+
+        customElements.define("my-form", MyForm);
+        customElements.define("another-form", AnotherForm);
+        customElements.define("mustache-form", MustacheForm);
+
+        document.addEventListener("sayHello", ev => {
+            console.log("received on html", ev);
+        });
+
+        window.scrollBy(0, 0);
+    });
+
+let tplProvider = new TplProvider();
